@@ -1,7 +1,11 @@
 ---
 substitutions:
   device_name: slimmelezer
-    
+
+external_components:
+  - source: github://rgb-argentum/dsmr/components@main
+    components: [ dsmr ]
+
 esphome:
   name: ${device_name}
   platform: ESP8266
@@ -56,7 +60,7 @@ api:
 ota:
 
 dashboard_import:
-  package_import_url: github://zuidwijk/dsmr/slimmelezer.yaml@main
+  package_import_url: github://rgb-argentum/dsmr/slimmelezer.yaml@main
 
 web_server:
   port: 80
@@ -64,7 +68,7 @@ web_server:
 uart:
   baud_rate: 115200
   rx_pin: D7
-  rx_buffer_size: 1700
+  rx_buffer_size: 3000
 
 globals:
   - id: has_key
@@ -77,24 +81,50 @@ globals:
 
 dsmr:
   id: dsmr_instance
-  max_telegram_length: 1700
+  max_telegram_length: 3000
   # For Luxembourg users set here your decryption key
   #decryption_key: !secret decryption_key // enable this when using decryption for Luxembourg; key like '00112233445566778899AABBCCDDEEFF'
 
 sensor:
   - platform: dsmr
+    current_tariff:
+      name: "Current Tariff"
+    electricity_threshold:
+      name: "Electricity Threshold"
     energy_delivered_lux:
       name: "Energy Consumed Luxembourg"
     energy_delivered_tariff1:
       name: "Energy Consumed Tariff 1"
     energy_delivered_tariff2:
       name: "Energy Consumed Tariff 2"
+    energy_delivered_tariff3:
+      name: "Energy Consumed Tariff 3"
+    energy_delivered_tariff4:
+      name: "Energy Consumed Tariff 4"
     energy_returned_lux:
       name: "Energy Produced Luxembourg"
     energy_returned_tariff1:
       name: "Energy Produced Tariff 1"
     energy_returned_tariff2:
       name: "Energy Produced Tariff 2"
+    energy_returned_tariff3:
+      name: "Energy Produced Tariff 3"
+    energy_returned_tariff4:
+      name: "Energy Produced Tariff 4"
+    total_imported_energy:
+      name: "Total Imported Reactive Energy"
+    total_exported_energy:
+      name: "Total Exported Reactive Energy"
+    reactive_energy1:
+      name: "Reactive Energy QI"
+    reactive_energy2:
+      name: "Reactive Energy QII"
+    reactive_energy3:
+      name: "Reactive Energy QIII"
+    reactive_energy4:
+      name: "Reactive Energy QIV"
+    energy_combined:
+      name: "Combined Energy"
     power_delivered:
       name: "Power Consumed"
       accuracy_decimals: 3
@@ -141,6 +171,30 @@ sensor:
       name: "Gas Consumed"
     gas_delivered_be:
       name: "Gas Consumed Belgium"
+    power_factor:
+      name: "Power Factor"
+    power_factor_l1:
+      name: "Power Factor Phase 1"
+    power_factor_l2:
+      name: "Power Factor Phase 2"
+    power_factor_l3:
+      name: "Power Factor Phase 3"
+    frequency:
+      name: "Frequency"
+    reactive_power1:
+      name: "Reactive Power QI"
+    reactive_power2:
+      name: "Reactive Power QII"
+    reactive_power3:
+      name: "Reactive Power QIII"
+    reactive_power4:
+      name: "Reactive Power QIV"
+    current_limit_l1:
+      name: "Current Limit Phase 1"
+    current_limit_l2:
+      name: "Current Limit Phase 2"
+    current_limit_l3:
+      name: "Current Limit Phase 3"
   - platform: uptime
     name: "SlimmeLezer Uptime"
   - platform: wifi_signal
@@ -151,10 +205,16 @@ text_sensor:
   - platform: dsmr
     identification:
       name: "DSMR Identification"
-    p1_version:
-      name: "DSMR Version"
-    p1_version_be:
-      name: "DSMR Version Belgium"
+    cosem_device_name:
+      name: "COSEM Logical Device Name"
+    serial_number:
+      name: "Serial Number"
+    circuit_breaker_state:
+      name: "Circuit Breaker State"
+    # last_month_packed_values:
+    #   name: "Last Month Packed Values"
+    # message_long:
+    #   name: "Text message"
   - platform: wifi_info
     ip_address:
       name: "SlimmeLezer IP Address"
